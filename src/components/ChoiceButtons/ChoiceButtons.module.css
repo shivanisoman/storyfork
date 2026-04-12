@@ -1,0 +1,73 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.choiceBtn {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-left: 2px solid var(--border-ink);
+  padding: 0.85rem 1.1rem;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    opacity 0.25s ease,
+    transform 0.2s ease;
+  border-radius: 0 2px 2px 0;
+  animation: slideIn 0.35s ease both;
+  outline: none;
+}
+
+.choiceBtn:hover:not(:disabled) {
+  border-left-width: 4px;
+  border-left-color: var(--accent-gold);
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateX(2px);
+}
+
+.choiceBtn:focus-visible {
+  outline: 1px solid var(--accent-gold);
+  outline-offset: 2px;
+}
+
+.choiceBtn.selected {
+  border-left-width: 4px;
+  border-left-color: var(--accent-gold);
+  background: color-mix(in srgb, var(--accent-gold) 8%, transparent);
+}
+
+.choiceBtn.faded {
+  opacity: 0.25;
+}
+
+.badge {
+  font-family: 'Courier Prime', monospace;
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: var(--accent-gold);
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+  transition: color 0.2s ease;
+}
+
+.choiceText {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: var(--text-primary);
+  opacity: 0.85;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
