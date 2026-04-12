@@ -111,6 +111,16 @@ function extractParsedResponse(rawContent) {
     };
   }
 
+  // Shuffle choices so best (A) isn't always first and worst (D) isn't always last
+  if (!isEnding && choiceA && choiceB && choiceC && choiceD) {
+    const choices = [choiceA, choiceB, choiceC, choiceD];
+    for (let i = choices.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [choices[i], choices[j]] = [choices[j], choices[i]];
+    }
+    return { storyText, choiceA: choices[0], choiceB: choices[1], choiceC: choices[2], choiceD: choices[3], isEnding, endingType };
+  }
+
   return { storyText, choiceA, choiceB, choiceC, choiceD, isEnding, endingType };
 }
 
