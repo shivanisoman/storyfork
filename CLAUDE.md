@@ -44,24 +44,24 @@ The LLM is instructed via system prompt to use custom delimiters:
 ```
 [STORY]...[/STORY]  [CHOICE_A]...[/CHOICE_A]  [CHOICE_B]...[/CHOICE_B]
 ```
-`extractParsedResponse()` parses these with regex. On the final turn the LLM omits choice tags, appends `[END]`, and includes a `[OUTCOME:good]` or `[OUTCOME:bad]` tag to signal ending type. If mid-game parsing fails (LLM drops format), fallback placeholder choices are returned to prevent a crash.
+`extractParsedResponse()` parses these with regex. On the final turn the LLM omits choice tags, appends `[END]`, and includes a `[OUTCOME]good[/OUTCOME]` or `[OUTCOME]bad[/OUTCOME]` tag to signal ending type. If mid-game parsing fails (LLM drops format), fallback placeholder choices are returned to prevent a crash.
 
 API calls use `temperature: 0.85` and `max_tokens: 800`.
 
 ### Configuration (`src/config/gameConfig.js`)
 
 **Single source of truth for all tuneable values:**
-- `MAX_TURNS` — change this to adjust game length (currently `3`)
+- `MAX_TURNS` — change this to adjust game length (currently `5`)
 - `MODEL` — OpenAI model string (currently `'gpt-4o-mini'`)
 - `TYPEWRITER_SPEED_MS` — character animation delay in ms (currently `18`)
-- `GENRES` — array of genre objects; drives both the selector UI and the system prompt. Each genre object contains:
-  - `id`, `label`, `emoji` — UI display
-  - `tone` — tone instruction injected into the system prompt
-  - `scenarios` — array of 20 scenario starters; one is randomly selected per game
-  - `goodEndingIcon`, `badEndingIcon` — shown on the GameOver screen
-  - `theme` — full CSS variable map for the theming system
+- `GENRES` — array of 5 genre objects; drives the selector UI. Each genre object contains:
+  - `id`, `label`, `icon`, `color`, `description` — UI display
+- `GENRE_TONES` — map of genre id → tone instruction injected into the system prompt
+- `GENRE_SCENARIOS` — map of genre id → array of 20 scenario starters; one is randomly selected per game
+- `ENDING_ICONS` — map of genre id → `{ good, bad }` icons shown on the GameOver screen
+- `GENRE_THEMES` — map of genre id → full CSS variable map for the theming system
 - `SCENARIO_MODIFIERS` — array of 12 complications (e.g. hidden agendas, time limits, player secrets) randomly mixed into the initial prompt to add variety
-- `ROMAN_NUMERALS` — lookup array used by the turn tracker UI
+- `ROMAN` — lookup array used by the turn tracker UI
 
 ### Theming System (`src/utils/theme.js`)
 
@@ -80,7 +80,7 @@ The themed CSS variables are:
 - CSS Modules (`.module.css`) scoped per component — no global class collisions
 - Key selectors use `var(--font-display)` and `var(--font-body)` for genre-responsive fonts; UI chrome elements (badges, monospace labels) keep hardcoded `'Courier Prime'`
 - `--accent-gold` is the single authoritative accent colour; `--genre-color` was removed — don't reintroduce it
-- Google Fonts loaded in `index.html`: Cinzel, Crimson Text, Courier Prime, Cormorant Garamond, EB Garamond, IM Fell English, Orbitron, Playfair Display
+- Google Fonts loaded in `index.html`: Cinzel, Cinzel Decorative, Crimson Text, Courier Prime, Cormorant Garamond, EB Garamond, IM Fell English, Orbitron, Playfair Display
 
 ### Component Data Flow
 

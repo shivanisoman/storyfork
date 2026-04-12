@@ -1,5 +1,5 @@
 // ── Change MAX_TURNS here to adjust game length ──────────────────────────────
-export const MAX_TURNS = 3;
+export const MAX_TURNS = 5;
 
 export const MODEL = 'gpt-4o-mini';
 

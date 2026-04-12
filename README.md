@@ -2,8 +2,6 @@
 
 A browser-based AI-driven text adventure game built with React + Vite. Pick a genre, make choices, and let GPT-4o-mini spin your story to a good or bad ending.
 
-![Genre Select → Playing → Game Over](https://via.placeholder.com/800x400?text=storyfork+screenshot)
-
 ## Features
 
 - **Multiple genres** — each with its own tone, scenarios, fonts, and colour theme
@@ -33,7 +31,7 @@ A browser-based AI-driven text adventure game built with React + Vite. Pick a ge
 ### Setup
 
 ```bash
-git clone https://github.com/<your-username>/storyfork.git
+git clone https://github.com/shivanisoman/storyfork.git
 cd storyfork
 npm install
 ```
@@ -77,15 +75,15 @@ All tuneable values live in `src/config/gameConfig.js`:
 
 | Constant | Default | Description |
 |---|---|---|
-| `MAX_TURNS` | `3` | Number of story beats before the ending |
+| `MAX_TURNS` | `5` | Number of story beats before the ending |
 | `MODEL` | `gpt-4o-mini` | OpenAI model string |
 | `TYPEWRITER_SPEED_MS` | `18` | Ms per character in the typewriter animation |
-| `GENRES` | 4 genres | Add/edit genres, scenarios, themes here |
+| `GENRES` | 5 genres | Add/edit genres here; tones, scenarios, and themes are in separate exports |
 | `SCENARIO_MODIFIERS` | 12 items | Random complications mixed into the opening prompt |
 
 ## How It Works
 
 1. The player selects a genre; a random scenario + modifier are drawn and sent to the LLM as a system prompt.
 2. Each turn the full conversation history is sent to OpenAI. The LLM responds using custom delimiters (`[STORY]`, `[CHOICE_A]`, `[CHOICE_B]`) that the app parses with regex.
-3. On the penultimate turn the user message is prefixed with `PENULTIMATE TURN` to signal the LLM to set up a climax. On the final turn it's prefixed with `FINAL TURN` — the LLM writes an ending, omits choice tags, and appends `[END]` + `[OUTCOME:good|bad]`.
+3. On the penultimate turn the user message is prefixed with `PENULTIMATE TURN` to signal the LLM to set up a climax. On the final turn it's prefixed with `FINAL TURN` — the LLM writes an ending, omits choice tags, and appends `[END]` + `[OUTCOME]good|bad[/OUTCOME]`.
 4. The Game Over screen renders the full choice timeline and styles itself based on the outcome.
