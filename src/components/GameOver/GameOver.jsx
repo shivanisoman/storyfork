@@ -15,11 +15,8 @@ export default function GameOver({ endingText, endingType, storySegments, genre,
       <div className={styles.container}>
         <div className={styles.headerSection}>
           <div className={styles.flourishTop} aria-hidden="true">— {flourish} —</div>
-          <span className={`${styles.endingBadge} ${isGood ? styles.goodBadge : styles.badBadge}`}>
-            {isGood ? 'Good Ending' : 'Bad Ending'}
-          </span>
           <div className={styles.endingIcon} aria-hidden="true">{endingIcon}</div>
-          <h1 className={styles.title}>The End</h1>
+          <h1 className={styles.title}>{isGood ? 'The Good End' : 'The Bad End'}</h1>
           <div className={styles.flourishBottom} aria-hidden="true">— {flourish} —</div>
         </div>
 

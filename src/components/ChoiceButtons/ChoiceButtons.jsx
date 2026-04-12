@@ -1,6 +1,13 @@
 import { useEffect, useState } from 'react';
 import styles from './ChoiceButtons.module.css';
 
+const CHOICE_KEYS = [
+  { letter: 'A', key: 'a', field: 'choiceA', delay: '0ms' },
+  { letter: 'B', key: 'b', field: 'choiceB', delay: '60ms' },
+  { letter: 'C', key: 'c', field: 'choiceC', delay: '120ms' },
+  { letter: 'D', key: 'd', field: 'choiceD', delay: '180ms' },
+];
+
 export default function ChoiceButtons({ choices, onChoiceSelect, isLoading, typewriterDone }) {
   const [selected, setSelected] = useState(null);
   const visible = typewriterDone && !isLoading && choices;
@@ -10,13 +17,17 @@ export default function ChoiceButtons({ choices, onChoiceSelect, isLoading, type
     setSelected(null);
   }, [choices]);
 
-  // Keyboard shortcuts: A / B keys
+  // Keyboard shortcuts: A / B / C / D keys
   useEffect(() => {
     if (!visible || selected) return;
 
     function handleKey(e) {
-      if (e.key.toLowerCase() === 'a') pick('A', choices.choiceA);
-      if (e.key.toLowerCase() === 'b') pick('B', choices.choiceB);
+      for (const c of CHOICE_KEYS) {
+        if (e.key.toLowerCase() === c.key) {
+          pick(c.letter, choices[c.field]);
+          return;
+        }
+      }
     }
 
     window.addEventListener('keydown', handleKey);
@@ -24,7 +35,7 @@ export default function ChoiceButtons({ choices, onChoiceSelect, isLoading, type
   }, [visible, selected, choices]);
 
   function pick(letter, text) {
-    if (selected) return;
+    if (selected || !text) return;
     setSelected(letter);
     setTimeout(() => onChoiceSelect(text), 300);
   }
@@ -33,26 +44,19 @@ export default function ChoiceButtons({ choices, onChoiceSelect, isLoading, type
 
   return (
     <div className={styles.container}>
-      <button
-        className={`${styles.choiceBtn} ${selected === 'A' ? styles.selected : ''} ${selected && selected !== 'A' ? styles.faded : ''}`}
-        onClick={() => pick('A', choices.choiceA)}
-        disabled={!!selected}
-        aria-label={`Choice A: ${choices.choiceA}`}
-        style={{ animationDelay: '0ms' }}
-      >
-        <span className={styles.badge}>[A]</span>
-        <span className={styles.choiceText}>{choices.choiceA}</span>
-      </button>
-      <button
-        className={`${styles.choiceBtn} ${selected === 'B' ? styles.selected : ''} ${selected && selected !== 'B' ? styles.faded : ''}`}
-        onClick={() => pick('B', choices.choiceB)}
-        disabled={!!selected}
-        aria-label={`Choice B: ${choices.choiceB}`}
-        style={{ animationDelay: '80ms' }}
-      >
-        <span className={styles.badge}>[B]</span>
-        <span className={styles.choiceText}>{choices.choiceB}</span>
-      </button>
+      {CHOICE_KEYS.map(({ letter, field, delay }) => (
+        <button
+          key={letter}
+          className={`${styles.choiceBtn} ${selected === letter ? styles.selected : ''} ${selected && selected !== letter ? styles.faded : ''}`}
+          onClick={() => pick(letter, choices[field])}
+          disabled={!!selected}
+          aria-label={`Choice ${letter}: ${choices[field]}`}
+          style={{ animationDelay: delay }}
+        >
+          <span className={styles.badge}>[{letter}]</span>
+          <span className={styles.choiceText}>{choices[field]}</span>
+        </button>
+      ))}
     </div>
   );
 }

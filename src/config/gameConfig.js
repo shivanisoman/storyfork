@@ -17,7 +17,7 @@ export const GENRES = [
 export const GENRE_TONES = {
   adventure: 'Heroic, action-driven, full of obstacles and triumph. Classic quest structure with physical danger and discovery.',
   horror:    'Channel R.L. Stine\'s Goosebumps: spooky but not gory, creepy but fun. Short punchy sentences. Cliffhanger-style reveals at the end of segments. The monster or threat should feel genuinely unsettling but age-appropriately so — think haunted houses, strange neighbours, objects that shouldn\'t move, and the dawning realisation that something is very wrong. Use dread and atmosphere over violence. End segments on an ominous note that makes the reader desperate to know what happens next.',
-  romance:   'Light, warm, and genuinely funny. Think romantic comedy: awkward meet-cutes, misunderstandings that spiral hilariously out of control, and moments of surprising heart. The protagonist is endearingly clumsy or oblivious. Jokes should land naturally — never forced. Each segment must include spoken dialogue: quippy one-liners, accidental confessions, flustered deflections, or perfectly timed terrible jokes. Let characters talk to and past each other. Underneath the comedy, there is real warmth and emotional payoff.',
+  romance:   'Light, warm, and genuinely funny. Think romantic comedy: awkward meet-cutes, misunderstandings that spiral hilariously out of control, and moments of surprising heart. Jokes should land naturally — never forced. Each segment must include spoken dialogue: quippy one-liners, accidental confessions, flustered deflections, or perfectly timed terrible jokes. Let characters talk to and past each other. Underneath the comedy, there is real warmth and emotional payoff.',
   fantasy:   'Ancient magic, mythic powers, and worlds with hidden rules the protagonist is only beginning to understand.',
   'sci-fi':  'Wonder and existential danger in equal measure. Technology, the cosmos, and what it means to be human.',
 };
@@ -100,6 +100,7 @@ export const GENRE_SCENARIOS = {
     "You've been writing a very funny anonymous blog about your terrible dating life. Someone at your office has just started reading it out loud at lunch.",
     "You and a stranger at the gym arrive at exactly the same time every morning. The music cuts out and you both start humming the next song simultaneously.",
     "You've agreed to be your cousin's plus-one at a wedding. So has someone from a conference three months ago who left a very strong impression.",
+    "You've been happily almost-dating your best friend for months — everyone can see it but you two. Then their charming, infuriating ex arrives back in town and seems very interested in you specifically.",
   ],
   fantasy: [
     "You wake to find a dragon the size of a house cat sitting on your chest, insisting — quite rudely — that it belongs to you.",

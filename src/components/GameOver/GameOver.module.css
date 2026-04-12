@@ -76,29 +76,6 @@
   opacity: 0.6;
 }
 
-/* Ending badge */
-.endingBadge {
-  font-family: 'Courier Prime', monospace;
-  font-size: 0.82rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-  padding: 0.35rem 1.1rem;
-  border-radius: 1px;
-  border: 1px solid;
-}
-
-.goodBadge {
-  color: #1a1200;
-  background: var(--accent-gold);
-  border-color: var(--accent-gold);
-}
-
-.badBadge {
-  color: #f0c0c0;
-  background: #8b1a1a;
-  border-color: #c03030;
-}
-
 /* Genre icon */
 .endingIcon {
   font-size: 2rem;
@@ -107,7 +84,8 @@
 
 /* Bad ending overrides */
 .badEnding .title {
-  text-shadow: 0 0 40px rgba(176, 48, 48, 0.35);
+  color: #e8a8a8;
+  text-shadow: 0 0 40px rgba(176, 48, 48, 0.45);
 }
 
 .badEnding .flourishTop,

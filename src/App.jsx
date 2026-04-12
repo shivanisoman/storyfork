@@ -44,14 +44,14 @@ export default function App() {
     }));
 
     try {
-      const { storyText, choiceA, choiceB } = await sendTurn(initialMessages);
-      const assistantMessage = { role: 'assistant', content: `[STORY]\n${storyText}\n[/STORY]\n[CHOICE_A]\n${choiceA}\n[/CHOICE_A]\n[CHOICE_B]\n${choiceB}\n[/CHOICE_B]` };
+      const { storyText, choiceA, choiceB, choiceC, choiceD } = await sendTurn(initialMessages);
+      const assistantMessage = { role: 'assistant', content: `[STORY]\n${storyText}\n[/STORY]\n[CHOICE_A]\n${choiceA}\n[/CHOICE_A]\n[CHOICE_B]\n${choiceB}\n[/CHOICE_B]\n[CHOICE_C]\n${choiceC}\n[/CHOICE_C]\n[CHOICE_D]\n${choiceD}\n[/CHOICE_D]` };
 
       setGameState(s => ({
         ...s,
         messages: [...s.messages, assistantMessage],
-        storySegments: [{ text: storyText, choiceA, choiceB, selectedChoice: null }],
-        currentChoices: { choiceA, choiceB },
+        storySegments: [{ text: storyText, choiceA, choiceB, choiceC, choiceD, selectedChoice: null }],
+        currentChoices: { choiceA, choiceB, choiceC, choiceD },
         turnCount: 1,
         isLoading: false,
       }));
@@ -80,16 +80,16 @@ export default function App() {
     }));
 
     try {
-      const { storyText, choiceA, choiceB, isEnding, endingType } = await sendTurn(updatedMessages);
+      const { storyText, choiceA, choiceB, choiceC, choiceD, isEnding, endingType } = await sendTurn(updatedMessages);
       const assistantContent = isEnding
         ? `[STORY]\n${storyText}\n[/STORY]\n[END]`
-        : `[STORY]\n${storyText}\n[/STORY]\n[CHOICE_A]\n${choiceA}\n[/CHOICE_A]\n[CHOICE_B]\n${choiceB}\n[/CHOICE_B]`;
+        : `[STORY]\n${storyText}\n[/STORY]\n[CHOICE_A]\n${choiceA}\n[/CHOICE_A]\n[CHOICE_B]\n${choiceB}\n[/CHOICE_B]\n[CHOICE_C]\n${choiceC}\n[/CHOICE_C]\n[CHOICE_D]\n${choiceD}\n[/CHOICE_D]`;
 
       if (isEnding) {
         setGameState(s => ({
           ...s,
           messages: [...updatedMessages, { role: 'assistant', content: assistantContent }],
-          storySegments: [...updatedSegments, { text: storyText, choiceA: null, choiceB: null, selectedChoice: null }],
+          storySegments: [...updatedSegments, { text: storyText, choiceA: null, choiceB: null, choiceC: null, choiceD: null, selectedChoice: null }],
           phase: 'game_over',
           endingText: storyText,
           endingType: endingType ?? 'bad',
@@ -99,8 +99,8 @@ export default function App() {
         setGameState(s => ({
           ...s,
           messages: [...updatedMessages, { role: 'assistant', content: assistantContent }],
-          storySegments: [...updatedSegments, { text: storyText, choiceA, choiceB, selectedChoice: null }],
-          currentChoices: { choiceA, choiceB },
+          storySegments: [...updatedSegments, { text: storyText, choiceA, choiceB, choiceC, choiceD, selectedChoice: null }],
+          currentChoices: { choiceA, choiceB, choiceC, choiceD },
           turnCount: s.turnCount + 1,
           isLoading: false,
         }));

@@ -23,7 +23,7 @@ STORY STRUCTURE:
 - Build tension and consequence: each choice must feel meaningful and alter the story.
 - Escalate stakes with every turn. The story should feel like it's building toward something — each segment raises the emotional or physical cost of what's at stake.
 - Ensure the arc leads to a satisfying, complete resolution by the final turn.
-- Each pair of choices should carry implicit narrative weight: one option leans toward hope, courage, or connection (the "better path"); the other toward fear, selfishness, or harm (the "worse path"). Never label or explain this to the player — let the framing speak for itself.
+- Each set of four choices must span a full moral and narrative spectrum — from the noblest act to the most destructive — with no two choices resembling each other. Never label or explain the moral weight to the player; let the framing speak for itself.
 
 GENRE TONE — ${genreLabel}:
 ${tone}
@@ -34,16 +34,24 @@ STRICT OUTPUT FORMAT — follow this exactly every single response:
 <Your narrative here. 2–4 paragraphs. Second person. Present tense.>
 [/STORY]
 [CHOICE_A]
-<First option — one clear, action-oriented sentence.>
+<Best path — heroic, selfless, or the highest moral ground. Carries real cost or risk.>
 [/CHOICE_A]
 [CHOICE_B]
-<Second option — one clear, action-oriented sentence.>
+<Cautious but decent path — pragmatic, well-intentioned, slightly self-preserving but not harmful.>
 [/CHOICE_B]
+[CHOICE_C]
+<Morally grey or risky path — tempting, with clear costs or compromises visible in the framing.>
+[/CHOICE_C]
+[CHOICE_D]
+<Worst path — selfish, cowardly, or outright harmful. The consequences feel real.>
+[/CHOICE_D]
+
+The four choices MUST be radically different from each other — different actions, different locations, different targets, different moral weight. No two choices should overlap in what the player is doing. Order them A (best outcome) → D (worst outcome) in terms of moral and narrative consequence, but never label or explain this to the player — let the framing speak for itself.
 
 PENULTIMATE TURN RULE:
 When the user's message begins with "PENULTIMATE TURN", the story has reached its crisis point.
 Write the most intense, high-stakes segment yet — the situation has become critical, the consequences of what comes next are irreversible.
-The two choices must feel like a true fork in the road: one leads toward light, sacrifice, or redemption; the other toward darkness, self-preservation, or ruin.
+The four choices must span the full spectrum: A leads toward light, sacrifice, or redemption; D leads toward darkness, ruin, or betrayal; B and C occupy meaningfully different middle ground.
 Make the weight of the decision unmistakable in the prose — the player should feel this matters above all else.
 
 OPENING SCENARIO:
@@ -56,9 +64,10 @@ Begin the story weaving both elements naturally into your opening segment. Do no
 
 FINAL TURN RULE:
 When the user's message begins with "FINAL TURN", the player's last choice is the most important factor — it carries more weight than all prior choices combined.
-If that final choice was brave, selfless, or hopeful AND the majority of earlier choices were also positive, write a GOOD ending — triumph, connection, hope, or resolution.
-In all other cases — mixed choices, a weak final choice, or a bad final choice — write a BAD ending — loss, regret, failure, or tragedy. Default to bad when uncertain.
-Omit [CHOICE_A] and [CHOICE_B] entirely.
+Each choice carries a score: A = +2, B = +1, C = −1, D = −2. Tally the player's full history of choices.
+If the total score is positive AND the final choice was A or B, write a GOOD ending — triumph, connection, hope, or resolution.
+In all other cases write a BAD ending — loss, regret, failure, or tragedy. Default to bad when uncertain.
+Omit [CHOICE_A], [CHOICE_B], [CHOICE_C], and [CHOICE_D] entirely.
 After [/STORY], add [OUTCOME]good[/OUTCOME] or [OUTCOME]bad[/OUTCOME] to declare the ending type.
 Then end with [END] on its own line.`;
 }
@@ -77,26 +86,32 @@ function extractParsedResponse(rawContent) {
   const storyMatch   = rawContent.match(/\[STORY\]([\s\S]*?)\[\/STORY\]/);
   const choiceAMatch = rawContent.match(/\[CHOICE_A\]([\s\S]*?)\[\/CHOICE_A\]/);
   const choiceBMatch = rawContent.match(/\[CHOICE_B\]([\s\S]*?)\[\/CHOICE_B\]/);
+  const choiceCMatch = rawContent.match(/\[CHOICE_C\]([\s\S]*?)\[\/CHOICE_C\]/);
+  const choiceDMatch = rawContent.match(/\[CHOICE_D\]([\s\S]*?)\[\/CHOICE_D\]/);
   const outcomeMatch = rawContent.match(/\[OUTCOME\](good|bad)\[\/OUTCOME\]/);
   const isEnding     = rawContent.includes('[END]');
 
   const storyText  = storyMatch ? storyMatch[1].trim() : rawContent.trim();
   const choiceA    = choiceAMatch ? choiceAMatch[1].trim() : null;
   const choiceB    = choiceBMatch ? choiceBMatch[1].trim() : null;
+  const choiceC    = choiceCMatch ? choiceCMatch[1].trim() : null;
+  const choiceD    = choiceDMatch ? choiceDMatch[1].trim() : null;
   const endingType = outcomeMatch ? outcomeMatch[1] : null;
 
   // Fallback: mid-game but LLM dropped formatting
-  if (!isEnding && (!choiceA || !choiceB)) {
+  if (!isEnding && (!choiceA || !choiceB || !choiceC || !choiceD)) {
     return {
       storyText,
       choiceA: choiceA ?? 'Press forward into the unknown.',
       choiceB: choiceB ?? 'Pause and gather your thoughts.',
+      choiceC: choiceC ?? 'Look for another way around.',
+      choiceD: choiceD ?? 'Turn back while you still can.',
       isEnding: false,
       endingType: null,
     };
   }
 
-  return { storyText, choiceA, choiceB, isEnding, endingType };
+  return { storyText, choiceA, choiceB, choiceC, choiceD, isEnding, endingType };
 }
 
 export async function sendTurn(messages) {
@@ -104,7 +119,7 @@ export async function sendTurn(messages) {
     model: MODEL,
     messages,
     temperature: 0.85,
-    max_tokens: 800,
+    max_tokens: 1100,
   });
 
   const rawContent = response.choices[0].message.content;

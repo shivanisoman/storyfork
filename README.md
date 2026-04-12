@@ -11,7 +11,7 @@ A browser-based AI-driven text adventure game built with React + Vite. Pick a ge
 - **Branching story engine** — the LLM generates a unique story every run; no two games are the same
 - **Dynamic theming** — CSS variables swap on genre hover/select for an instant visual preview
 - **Typewriter animation** — story text animates character-by-character; choices appear only after it finishes
-- **Keyboard shortcuts** — press `A` or `B` to choose without touching the mouse
+- **Keyboard shortcuts** — press `A`, `B`, `C`, or `D` to choose without touching the mouse
 - **Outcome tracking** — a choice timeline on the Game Over screen shows every decision you made
 - **Good / bad endings** — the LLM signals the outcome type; the ending screen styles itself accordingly
 
@@ -87,6 +87,6 @@ All tuneable values live in `src/config/gameConfig.js`:
 ## How It Works
 
 1. The player selects a genre (or chooses Custom and types their own vibe + optional opening scene); a scenario and random modifier are assembled into a system prompt for the LLM.
-2. Each turn the full conversation history is sent to OpenAI. The LLM responds using custom delimiters (`[STORY]`, `[CHOICE_A]`, `[CHOICE_B]`) that the app parses with regex.
-3. On the penultimate turn the user message is prefixed with `PENULTIMATE TURN` to signal the LLM to set up a climax. On the final turn it's prefixed with `FINAL TURN` — the LLM writes an ending, omits choice tags, and appends `[END]` + `[OUTCOME]good|bad[/OUTCOME]`.
+2. Each turn the full conversation history is sent to OpenAI. The LLM responds using custom delimiters (`[STORY]`, `[CHOICE_A]` through `[CHOICE_D]`) that the app parses with regex. The four choices span a full moral spectrum — A is the noblest act, D the most harmful — each radically distinct in action and consequence.
+3. On the penultimate turn the user message is prefixed with `PENULTIMATE TURN` to signal the LLM to set up a climax. On the final turn it's prefixed with `FINAL TURN` — the LLM tallies a score (A=+2, B=+1, C=−1, D=−2) across all choices to determine the outcome, writes an ending, omits choice tags, and appends `[END]` + `[OUTCOME]good|bad[/OUTCOME]`.
 4. The Game Over screen renders the full choice timeline and styles itself based on the outcome.
