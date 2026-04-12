@@ -2,6 +2,8 @@
 
 A browser-based AI-driven text adventure game built with React + Vite. Pick a genre, make choices, and let GPT-4o-mini spin your story to a good or bad ending.
 
+![Storyfork home screen](./home-screen-storyfork.png)
+
 ## Features
 
 - **Multiple genres** — each with its own tone, scenarios, fonts, and colour theme

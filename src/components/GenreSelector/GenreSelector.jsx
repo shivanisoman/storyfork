@@ -35,7 +35,7 @@ export default function GenreSelector({ onGenreSelect }) {
     <div className={styles.container}>
       <div className={styles.inkBleed} aria-hidden="true" />
       <header className={styles.header}>
-        <h1 className={styles.title}>Chronicles</h1>
+        <h1 className={styles.title}>Storyfork</h1>
         <p className={styles.subtitle}>choose your fate</p>
       </header>
       <div className={styles.grid}>
