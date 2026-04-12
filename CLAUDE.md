@@ -12,6 +12,10 @@ npm run preview  # preview the production build locally
 
 No test runner or linter is configured.
 
+## Maintenance
+
+After implementing any feature change, update `README.md` to reflect it before considering the task complete.
+
 ## Environment
 
 Requires `VITE_OPENAI_API_KEY` in `.env` (Vite only exposes env vars prefixed with `VITE_` to the browser). The OpenAI client uses `dangerouslyAllowBrowser: true` — intentional for this dev POC.
@@ -48,14 +52,17 @@ The LLM is instructed via system prompt to use custom delimiters:
 
 API calls use `temperature: 0.85` and `max_tokens: 800`.
 
+`buildSystemPrompt` accepts an optional fifth argument `toneOverride` — when provided (custom genre), it is used as both the genre label and the tone instruction instead of `GENRE_TONES[genreId]`.
+
 ### Configuration (`src/config/gameConfig.js`)
 
 **Single source of truth for all tuneable values:**
 - `MAX_TURNS` — change this to adjust game length (currently `5`)
 - `MODEL` — OpenAI model string (currently `'gpt-4o-mini'`)
 - `TYPEWRITER_SPEED_MS` — character animation delay in ms (currently `18`)
-- `GENRES` — array of 5 genre objects; drives the selector UI. Each genre object contains:
+- `GENRES` — array of 6 genre objects (5 presets + 1 custom); drives the selector UI. Each genre object contains:
   - `id`, `label`, `icon`, `color`, `description` — UI display
+- `CUSTOM_SCENARIO_FALLBACK` — fallback scenario string used when the user leaves the custom scenario field blank
 - `GENRE_TONES` — map of genre id → tone instruction injected into the system prompt
 - `GENRE_SCENARIOS` — map of genre id → array of 20 scenario starters; one is randomly selected per game
 - `ENDING_ICONS` — map of genre id → `{ good, bad }` icons shown on the GameOver screen
@@ -67,7 +74,8 @@ API calls use `temperature: 0.85` and `max_tokens: 800`.
 
 Themes are applied by imperatively setting CSS custom properties on `document.documentElement`, overriding the `:root` defaults in `App.css`. This means all components theme automatically without prop changes.
 
-- `applyTheme(genreId)` — called on genre hover (preview) and on genre select (commit)
+- `applyTheme(genreId)` — called on genre select (commit); sets all CSS vars including fonts
+- `previewTheme(genreId)` — called on hover; sets only color vars, intentionally skips `--font-display` and `--font-body` so page-level fonts don't change during hover
 - `resetTheme()` — called on mouse-leave and on "Begin Again"
 
 CSS transitions on `body` and `.wrapper` animate background/color changes at `0.45s ease`. Fonts snap (no tween); this is intentional and imperceptible during the colour fade.
@@ -86,7 +94,7 @@ The themed CSS variables are:
 
 ```
 App.jsx (state + handlers)
-  ├── GenreSelector   — hover calls applyTheme/resetTheme directly; select calls onGenreSelect
+  ├── GenreSelector   — hover calls previewTheme (colors only) + sets font vars on the hovered element directly; select calls onGenreSelect(genreId, customData?)
   ├── GameScreen      — receives full gameState + onChoiceSelect; manages typewriter gate locally
   │     ├── StoryDisplay  — uses useTypewriter hook; past segments dimmed, current animates
   │     └── ChoiceButtons — hidden until typewriter isDone; keyboard shortcuts A/B

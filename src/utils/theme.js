@@ -13,16 +13,29 @@ const THEME_PROPS = [
   '--font-body',
 ];
 
+const FONT_PROPS = new Set(['--font-display', '--font-body']);
+
 /**
- * Apply a genre's full theme to :root by setting CSS custom properties
- * directly on document.documentElement. These override the :root defaults
- * in App.css. All themed components pick up the change automatically.
+ * Apply a genre's full theme to :root (colors + fonts).
+ * Used when committing a genre selection for the game screen.
  */
 export function applyTheme(genreId) {
   const theme = GENRE_THEMES[genreId];
   if (!theme) return;
   Object.entries(theme).forEach(([prop, value]) => {
     ROOT.style.setProperty(prop, value);
+  });
+}
+
+/**
+ * Apply only the color/spacing vars for a hover preview — intentionally
+ * skips font vars so the page title and other cards don't change typeface.
+ */
+export function previewTheme(genreId) {
+  const theme = GENRE_THEMES[genreId];
+  if (!theme) return;
+  Object.entries(theme).forEach(([prop, value]) => {
+    if (!FONT_PROPS.has(prop)) ROOT.style.setProperty(prop, value);
   });
 }
 

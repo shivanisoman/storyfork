@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MAX_TURNS, GENRE_SCENARIOS, SCENARIO_MODIFIERS } from './config/gameConfig';
+import { MAX_TURNS, GENRE_SCENARIOS, SCENARIO_MODIFIERS, CUSTOM_SCENARIO_FALLBACK } from './config/gameConfig';
 import { buildSystemPrompt, buildUserMessage, sendTurn } from './services/openai';
 import { applyTheme, resetTheme } from './utils/theme';
 import GenreSelector from './components/GenreSelector/GenreSelector';
@@ -23,12 +23,15 @@ const initialState = {
 export default function App() {
   const [gameState, setGameState] = useState(initialState);
 
-  async function handleGenreSelect(genreId) {
+  async function handleGenreSelect(genreId, customData) {
     applyTheme(genreId);  // commit genre theme for the full session
-    const scenarios = GENRE_SCENARIOS[genreId];
-    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+    const isCustom = genreId === 'custom' && customData;
+    const scenario = isCustom
+      ? (customData.scenario.trim() || CUSTOM_SCENARIO_FALLBACK)
+      : GENRE_SCENARIOS[genreId][Math.floor(Math.random() * GENRE_SCENARIOS[genreId].length)];
     const modifier = SCENARIO_MODIFIERS[Math.floor(Math.random() * SCENARIO_MODIFIERS.length)];
-    const systemPrompt = buildSystemPrompt(genreId, MAX_TURNS, scenario, modifier);
+    const toneOverride = isCustom ? customData.vibe : undefined;
+    const systemPrompt = buildSystemPrompt(genreId, MAX_TURNS, scenario, modifier, toneOverride);
     const initialMessages = [{ role: 'system', content: systemPrompt }];
 
     setGameState(s => ({

@@ -7,6 +7,7 @@ A browser-based AI-driven text adventure game built with React + Vite. Pick a ge
 ## Features
 
 - **Multiple genres** — each with its own tone, scenarios, fonts, and colour theme
+- **Custom genre** — type your own vibe and optional opening scenario to generate a fully bespoke story
 - **Branching story engine** — the LLM generates a unique story every run; no two games are the same
 - **Dynamic theming** — CSS variables swap on genre hover/select for an instant visual preview
 - **Typewriter animation** — story text animates character-by-character; choices appear only after it finishes
@@ -80,12 +81,12 @@ All tuneable values live in `src/config/gameConfig.js`:
 | `MAX_TURNS` | `5` | Number of story beats before the ending |
 | `MODEL` | `gpt-4o-mini` | OpenAI model string |
 | `TYPEWRITER_SPEED_MS` | `18` | Ms per character in the typewriter animation |
-| `GENRES` | 5 genres | Add/edit genres here; tones, scenarios, and themes are in separate exports |
+| `GENRES` | 6 genres | 5 presets + 1 custom slot; tones, scenarios, and themes are in separate exports |
 | `SCENARIO_MODIFIERS` | 12 items | Random complications mixed into the opening prompt |
 
 ## How It Works
 
-1. The player selects a genre; a random scenario + modifier are drawn and sent to the LLM as a system prompt.
+1. The player selects a genre (or chooses Custom and types their own vibe + optional opening scene); a scenario and random modifier are assembled into a system prompt for the LLM.
 2. Each turn the full conversation history is sent to OpenAI. The LLM responds using custom delimiters (`[STORY]`, `[CHOICE_A]`, `[CHOICE_B]`) that the app parses with regex.
 3. On the penultimate turn the user message is prefixed with `PENULTIMATE TURN` to signal the LLM to set up a climax. On the final turn it's prefixed with `FINAL TURN` — the LLM writes an ending, omits choice tags, and appends `[END]` + `[OUTCOME]good|bad[/OUTCOME]`.
 4. The Game Over screen renders the full choice timeline and styles itself based on the outcome.

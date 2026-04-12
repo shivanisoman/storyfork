@@ -11,6 +11,7 @@ export const GENRES = [
   { id: 'romance',   label: 'Rom-Com',   icon: '💌',  color: '#c2185b', description: 'Love, laughs & chaos' },
   { id: 'fantasy',   label: 'Fantasy',   icon: '🧙',  color: '#7b3fc4', description: 'Enter the arcane'  },
   { id: 'sci-fi',    label: 'Sci-Fi',    icon: '🚀',  color: '#0d7abf', description: 'Explore the stars' },
+  { id: 'custom',    label: 'Custom',    icon: '✍️',  color: '#8a9a7a', description: 'your story, your rules' },
 ];
 
 export const GENRE_TONES = {
@@ -27,7 +28,11 @@ export const ENDING_ICONS = {
   romance:   { good: '💕',  bad: '💔' },
   fantasy:   { good: '✨',  bad: '🌑' },
   'sci-fi':  { good: '🌟',  bad: '☢️' },
+  custom:    { good: '✦',   bad: '✗'  },
 };
+
+export const CUSTOM_SCENARIO_FALLBACK =
+  "An unexpected event has placed you at a crossroads. The path ahead is yours to choose.";
 
 export const GENRE_SCENARIOS = {
   adventure: [
@@ -212,5 +217,15 @@ export const GENRE_THEMES = {
     '--accent-gold':  '#00d4ff',
     '--font-display': "'Orbitron', sans-serif",
     '--font-body':    "'Courier Prime', monospace",
+  },
+  custom: {
+    '--bg-primary':   '#080805',
+    '--bg-parchment': '#0f0e0a',
+    '--text-primary': '#e2dbc8',
+    '--text-muted':   '#7a7260',
+    '--border-ink':   '#2a2618',
+    '--accent-gold':  '#b8966e',
+    '--font-display': "'IM Fell English', serif",
+    '--font-body':    "'Crimson Text', serif",
   },
 };

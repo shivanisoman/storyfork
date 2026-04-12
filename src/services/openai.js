@@ -6,9 +6,13 @@ const client = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-export function buildSystemPrompt(genreId, maxTurns, scenario, modifier) {
-  const genreLabel = genreId.charAt(0).toUpperCase() + genreId.slice(1);
-  const tone = GENRE_TONES[genreId] || '';
+export function buildSystemPrompt(genreId, maxTurns, scenario, modifier, toneOverride) {
+  const genreLabel = (genreId === 'custom' && toneOverride)
+    ? toneOverride
+    : genreId.charAt(0).toUpperCase() + genreId.slice(1);
+  const tone = toneOverride
+    ? `Capture the essence of: ${toneOverride}. Write with full genre authenticity.`
+    : GENRE_TONES[genreId] ?? '';
 
   return `You are a masterful storyteller running a ${genreLabel} text adventure.
 The player is the protagonist. Write in second person ("You..."), present tense, immersive prose.

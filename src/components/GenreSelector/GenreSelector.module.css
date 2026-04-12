@@ -66,7 +66,6 @@
   gap: 0.75rem;
   text-align: center;
   position: relative;
-  transform: skewX(-0.8deg);
   transition:
     transform 0.25s ease,
     border-color 0.25s ease,
@@ -86,7 +85,7 @@
 }
 
 .card:hover {
-  transform: skewX(0deg) translateY(-3px) scale(1.02);
+  transform: translateY(-3px) scale(1.02);
   border-color: var(--card-color);
   background: rgba(255, 255, 255, 0.045);
   box-shadow:
@@ -155,4 +154,195 @@
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(12px); }
   to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Custom card (wide, below the grid) ─────────────────────── */
+.customRow {
+  width: 100%;
+  max-width: 960px;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-ink);
+  animation: fadeUp 0.8s 0.25s ease both;
+}
+
+.customCard {
+  background: rgba(255, 255, 255, 0.018);
+  border: 1px dashed color-mix(in srgb, var(--border-ink) 80%, var(--card-color) 20%);
+  border-radius: 2px;
+  padding: 1rem 2.5rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+  outline: none;
+}
+
+.customCard:hover {
+  transform: translateY(-2px) scale(1.01);
+  border-color: var(--card-color);
+  border-style: solid;
+  background: rgba(255, 255, 255, 0.038);
+  box-shadow:
+    0 0 20px rgba(138, 154, 122, 0.08),
+    0 0 0 1px var(--card-color),
+    inset 0 0 24px rgba(0, 0, 0, 0.3);
+}
+
+.customCard:focus-visible {
+  outline: 2px solid var(--accent-gold);
+  outline-offset: 3px;
+}
+
+.customCardIcon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.customCardLabel {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  color: var(--text-primary);
+  letter-spacing: 0.1em;
+}
+
+.customCardDesc {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: lowercase;
+  margin-left: auto;
+}
+
+/* ── Custom form ─────────────────────────────────────────────── */
+.customForm {
+  width: 100%;
+  max-width: 520px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  animation: fadeUp 0.35s ease both;
+}
+
+.customField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.customLabel {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  text-transform: lowercase;
+  color: var(--text-muted);
+}
+
+.customOptional {
+  opacity: 0.6;
+  font-size: 0.68rem;
+}
+
+.customInput,
+.customTextarea {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-ink);
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  outline: none;
+  resize: vertical;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.customInput:focus,
+.customTextarea:focus {
+  border-color: color-mix(in srgb, var(--accent-gold) 50%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent-gold) 20%, transparent);
+}
+
+.customInput::placeholder,
+.customTextarea::placeholder {
+  color: var(--text-muted);
+  opacity: 0.5;
+}
+
+.customTextarea {
+  min-height: 96px;
+}
+
+.customActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.customBack {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease;
+  outline: none;
+}
+
+.customBack:hover {
+  color: var(--text-primary);
+}
+
+.customBack:focus-visible {
+  outline: 1px solid var(--accent-gold);
+  outline-offset: 3px;
+}
+
+.customBegin {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  color: var(--text-primary);
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--accent-gold) 50%, transparent);
+  border-radius: 1px;
+  padding: 0.7rem 2.25rem;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease;
+  outline: none;
+}
+
+.customBegin:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-gold) 10%, transparent);
+  border-color: var(--accent-gold);
+  transform: translateY(-1px);
+}
+
+.customBegin:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.customBegin:focus-visible {
+  outline: 1px solid var(--accent-gold);
+  outline-offset: 3px;
 }
