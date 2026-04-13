@@ -1,16 +1,10 @@
-import OpenAI from 'openai';
-import { MODEL, GENRE_TONES, MAX_TURNS, NARRATIVE_PACING_RULES, ROMANCE_CHOICE_RULE } from '../config/gameConfig';
+import { GENRE_TONES, MAX_TURNS, NARRATIVE_PACING_RULES, ROMANCE_CHOICE_RULE } from '../config/gameConfig';
 
 function isRomanceStory(genreId, toneOverride) {
   if (genreId === 'romance') return true;
   if (!toneOverride) return false;
   return /\b(romance|romantic|rom[- ]?com|love story|love-story)\b/i.test(toneOverride);
 }
-
-const client = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true,
-});
 
 export function buildSystemPrompt(genreId, maxTurns, scenario, modifier, toneOverride) {
   const genreLabel = (genreId === 'custom' && toneOverride)
@@ -152,13 +146,11 @@ function extractParsedResponse(rawContent) {
 }
 
 export async function sendTurn(messages) {
-  const response = await client.chat.completions.create({
-    model: MODEL,
-    messages,
-    temperature: 0.85,
-    max_tokens: 1100,
+  const res = await fetch('/api/chat', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ messages }),
   });
-
-  const rawContent = response.choices[0].message.content;
-  return extractParsedResponse(rawContent);
+  const { content } = await res.json();
+  return extractParsedResponse(content);
 }
