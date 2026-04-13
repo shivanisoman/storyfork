@@ -1,5 +1,11 @@
 import OpenAI from 'openai';
-import { MODEL, GENRE_TONES, MAX_TURNS } from '../config/gameConfig';
+import { MODEL, GENRE_TONES, MAX_TURNS, NARRATIVE_PACING_RULES, ROMANCE_CHOICE_RULE } from '../config/gameConfig';
+
+function isRomanceStory(genreId, toneOverride) {
+  if (genreId === 'romance') return true;
+  if (!toneOverride) return false;
+  return /\b(romance|romantic|rom[- ]?com|love story|love-story)\b/i.test(toneOverride);
+}
 
 const client = new OpenAI({
   apiKey: import.meta.env.VITE_OPENAI_API_KEY,
@@ -13,27 +19,15 @@ export function buildSystemPrompt(genreId, maxTurns, scenario, modifier, toneOve
   const tone = toneOverride
     ? `Capture the essence of: ${toneOverride}. Write with full genre authenticity.`
     : GENRE_TONES[genreId] ?? '';
+  const isRomance = isRomanceStory(genreId, toneOverride);
 
-  return `You are a masterful storyteller running a ${genreLabel} text adventure.
-The player is the protagonist. Write in second person ("You..."), present tense, immersive prose.
+  const choiceStructureRule = isRomance
+    ? ROMANCE_CHOICE_RULE.storyStructureOverride
+    : 'Each set of four choices must span a full moral and narrative spectrum — from the noblest act to the most destructive — with no two choices resembling each other. Never label or explain the moral weight to the player; let the framing speak for itself.';
 
-STORY STRUCTURE:
-- The story will unfold over exactly ${maxTurns} player decisions, then reach its resolution.
-- Make each narrative segment vivid and atmospheric — approximately 80–120 words. Be concise; every sentence should earn its place.
-- Build tension and consequence: each choice must feel meaningful and alter the story.
-- Escalate stakes with every turn. The story should feel like it's building toward something — each segment raises the emotional or physical cost of what's at stake.
-- Ensure the arc leads to a satisfying, complete resolution by the final turn.
-- Each set of four choices must span a full moral and narrative spectrum — from the noblest act to the most destructive — with no two choices resembling each other. Never label or explain the moral weight to the player; let the framing speak for itself.
-
-GENRE TONE — ${genreLabel}:
-${tone}
-
-STRICT OUTPUT FORMAT — follow this exactly every single response:
-
-[STORY]
-<Your narrative here. 2–4 paragraphs. Second person. Present tense.>
-[/STORY]
-[CHOICE_A]
+  const choiceFormat = isRomance
+    ? ROMANCE_CHOICE_RULE.choiceFormat.map(({ tag, desc }) => `[CHOICE_${tag}]\n<${desc}>\n[/CHOICE_${tag}]`).join('\n')
+    : `[CHOICE_A]
 <Best path — heroic, selfless, or the highest moral ground. Carries real cost or risk.>
 [/CHOICE_A]
 [CHOICE_B]
@@ -44,23 +38,56 @@ STRICT OUTPUT FORMAT — follow this exactly every single response:
 [/CHOICE_C]
 [CHOICE_D]
 <Worst path — selfish, cowardly, or outright harmful. The consequences feel real.>
-[/CHOICE_D]
+[/CHOICE_D]`;
 
-The four choices MUST be radically different from each other — different actions, different locations, different targets, different moral weight. No two choices should overlap in what the player is doing. Order them A (best outcome) → D (worst outcome) in terms of moral and narrative consequence, but never label or explain this to the player — let the framing speak for itself.
+  const orderingRule = isRomance
+    ? ROMANCE_CHOICE_RULE.orderingRule
+    : 'The four choices MUST be radically different from each other — different actions, different locations, different targets, different moral weight. No two choices should overlap in what the player is doing. Order them A (best outcome) → D (worst outcome) in terms of moral and narrative consequence, but never label or explain this to the player — let the framing speak for itself.';
+
+  const penultimateRule = isRomance
+    ? ROMANCE_CHOICE_RULE.penultimateRule
+    : 'The four choices must span the full spectrum: A leads toward light, sacrifice, or redemption; D leads toward darkness, ruin, or betrayal; B and C occupy meaningfully different middle ground.';
+
+  return `You are a masterful storyteller running a ${genreLabel} text adventure.
+The player is the protagonist. Write in second person ("You..."), present tense, immersive prose.
+
+STORY STRUCTURE:
+- The story will unfold over exactly ${maxTurns} player decisions, then reach its resolution.
+- Keep each narrative segment to approximately 80–120 words. Be concise; every sentence should earn its place.
+- Build tension and consequence: each choice must feel meaningful and alter the story.
+- Escalate stakes with every turn. The story should feel like it's building toward something — each segment raises the emotional or physical cost of what's at stake.
+- Ensure the arc leads to a satisfying, complete resolution by the final turn.
+- ${choiceStructureRule}
+
+PACING RULES — apply to every story segment:
+${NARRATIVE_PACING_RULES.map((r, i) => `${i + 1}. ${r}`).join('\n')}
+
+GENRE TONE — ${genreLabel}:
+${tone}
+
+STRICT OUTPUT FORMAT — follow this exactly every single response:
+
+[STORY]
+<Your narrative here. 2–4 paragraphs. Second person. Present tense.>
+[/STORY]
+${choiceFormat}
+
+${orderingRule}
 
 PENULTIMATE TURN RULE:
 When the user's message begins with "PENULTIMATE TURN", the story has reached its crisis point.
 Write the most intense, high-stakes segment yet — the situation has become critical, the consequences of what comes next are irreversible.
-The four choices must span the full spectrum: A leads toward light, sacrifice, or redemption; D leads toward darkness, ruin, or betrayal; B and C occupy meaningfully different middle ground.
+${penultimateRule}
 Make the weight of the decision unmistakable in the prose — the player should feel this matters above all else.
 
 OPENING SCENARIO:
 ${scenario}
-
+${modifier ? `
 COMPLICATING FACTOR:
 ${modifier}
 
-Begin the story weaving both elements naturally into your opening segment. Do not state either directly — let them emerge through the narrative.
+Begin the story weaving both elements naturally into your opening segment. Do not state either directly — let them emerge through the narrative.` : `
+Begin the story from the opening scenario. Do not state it directly — let it emerge through the narrative.`}
 
 FINAL TURN RULE:
 When the user's message begins with "FINAL TURN", the player's last choice is the most important factor — it carries more weight than all prior choices combined.

@@ -5,6 +5,27 @@ export const MODEL = 'gpt-4o-mini';
 
 export const TYPEWRITER_SPEED_MS = 18;
 
+export const NARRATIVE_PACING_RULES = [
+  'Every turn must introduce a new event, change, or discovery — never describe a static situation.',
+  'Prioritize actions and consequences over lengthy description.',
+  'Follow cause-and-effect structure: something happens, then the player feels the impact.',
+  'Each turn must raise the tension or stakes compared to the previous turn.',
+  'Use concrete, sensory details (what the player sees, hears, feels) rather than abstract statements.',
+  'End every segment with a clear, urgent situation that demands player action.',
+];
+
+export const ROMANCE_CHOICE_RULE = {
+  choiceFormat: [
+    { tag: 'A', desc: 'The action that most directly brings the two main characters closer together — vulnerable, open, or bold in their connection.' },
+    { tag: 'B', desc: 'An action that nudges them slightly closer, but cautiously — indirect, uncertain, or with plausible deniability.' },
+    { tag: 'C', desc: 'An action that creates distance or friction — avoidant, self-protective, or a missed opportunity.' },
+    { tag: 'D', desc: 'The action that pushes them furthest apart — a misunderstanding, deliberate retreat, or moment of self-sabotage.' },
+  ],
+  orderingRule: 'Every choice must reflect where the protagonist stands on the spectrum of connection vs. distance. Order them A (closest together) → D (furthest apart), but never label or explain this to the player — let the framing speak for itself.',
+  penultimateRule: 'Write the most emotionally charged moment yet — the characters are at a turning point where connection or separation feels permanent. A leads to openness and the chance of love; D leads to irreversible distance or heartbreak; B and C are charged with ambiguity.',
+  storyStructureOverride: 'Each set of four choices must span the full spectrum from bringing the two main characters together to pushing them apart — with no two choices resembling each other. Never label or explain this to the player; let the framing speak for itself.',
+};
+
 export const GENRES = [
   { id: 'adventure', label: 'Adventure', icon: '⚔️',  color: '#c8860a', description: 'Brave the unknown' },
   { id: 'horror',    label: 'Horror',    icon: '👻',  color: '#9b2020', description: 'Beware — if you dare' },
@@ -160,7 +181,6 @@ export const SCENARIO_MODIFIERS = [
   "The rules everyone assumed were in place no longer apply.",
   "The protagonist is not the only one with something to lose here.",
   "There is a way out that no one has noticed yet — including the protagonist.",
-  "The protagonist suspects they are being lied to, but cannot prove it.",
 ];
 
 // Roman numerals for the turn indicator (up to 10 turns)

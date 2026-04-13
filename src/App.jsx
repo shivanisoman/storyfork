@@ -29,7 +29,7 @@ export default function App() {
     const scenario = isCustom
       ? (customData.scenario.trim() || CUSTOM_SCENARIO_FALLBACK)
       : GENRE_SCENARIOS[genreId][Math.floor(Math.random() * GENRE_SCENARIOS[genreId].length)];
-    const modifier = SCENARIO_MODIFIERS[Math.floor(Math.random() * SCENARIO_MODIFIERS.length)];
+    const modifier = (genreId === 'romance' || genreId === 'custom') ? '' : SCENARIO_MODIFIERS[Math.floor(Math.random() * SCENARIO_MODIFIERS.length)];
     const toneOverride = isCustom ? customData.vibe : undefined;
     const systemPrompt = buildSystemPrompt(genreId, MAX_TURNS, scenario, modifier, toneOverride);
     const initialMessages = [{ role: 'system', content: systemPrompt }];
