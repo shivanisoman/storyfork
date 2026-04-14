@@ -8,10 +8,12 @@ export const TYPEWRITER_SPEED_MS = 18;
 export const NARRATIVE_PACING_RULES = [
   'Every turn must introduce a new event, change, or discovery — never describe a static situation.',
   'Prioritize actions and consequences over lengthy description.',
-  'Follow cause-and-effect structure: something happens, then the player feels the impact.',
-  'Each turn must raise the tension or stakes compared to the previous turn.',
+  'Follow cause-and-effect structure: something happens due to player\'s choice, then the player feels the impact.',
+  'Each turn must raise the tension or stakes compared to the previous turn occuring due to the protagonist\'s previous choice.',
   'Use concrete, sensory details (what the player sees, hears, feels) rather than abstract statements.',
   'End every segment with a clear, urgent situation that demands player action.',
+  'Do not literally say the stakes have been raised — show it through the narrative. For example, instead of "The situation is more dangerous now," say "The shadowy figure is now blocking your only exit."',
+  'Each story should have a clear end goal or resolution in mind - either good or bad depending on the protagonist\'s choices - and every turn should feel like a step towards that goal.',
 ];
 
 export const ROMANCE_CHOICE_RULE = {
